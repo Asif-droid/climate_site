@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Education Participation Ratio</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Button Styling */
+        .btn {
+            display: inline-block;
+            background-color: #3498db; /* Button Color */
+            color: white; /* Text Color */
+            padding: 15px 30px; /* Button Padding */
+            font-size: 16px; /* Font Size */
+            border: none; /* No Border */
+            border-radius: 5px; /* Rounded Corners */
+            text-decoration: none; /* No Underline */
+            font-family: 'Arial', sans-serif; /* Font */
+            transition: background-color 0.3s ease; /* Smooth Transition */
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Shadow Effect */
+        }
+
+        /* Hover Effect */
+        .btn:hover {
+            background-color: #2980b9; /* Darker Shade on Hover */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Enhance Shadow */
+        }
+
+        /* Button Press Effect */
+        .btn:active {
+            background-color: #1c6691; /* Even Darker Shade */
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* Reduce Shadow */
+            transform: translateY(2px); /* Slight Button Press Effect */
+        }
+    </style>
+</head>
+<body>
+    <h1>Select a Country</h1>
+    <form id="country-form">
+        <label for="country">Country:</label>
+        <select id="country" name="country">
+            {% for country in countries %}
+                <option value="{{ country }}">{{ country }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Plot Graph</button>
+    </form>
+    <a href="https://sites.google.com/view/climategenderequity/take-action" class="btn">Take Action</a>
+
+    <div id="plot"></div>
+    
+    <script>
+        $(document).ready(function() {
+            $('#country-form').submit(function(event) {
+                event.preventDefault();
+
+                // Get the selected country
+                var country = $('#country').val();
+
+                // Send the country to the server to get the graph
+                $.ajax({
+                    type: 'POST',
+                    url: '/plot',
+                    contentType: 'application/json',
+                    data: JSON.stringify({country: country}),
+                    success: function(response) {
+                        // Display the returned plot
+                        $('#plot').html(response.graph);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

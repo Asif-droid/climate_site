@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Education Participation Ratio</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Full page background styling */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            color: white; /* White text for visibility over background */
+        }
+
+        /* Background image styling */
+        .background-container {
+            background-image: url('https://example.com/background-image.jpg'); /* Add your image URL */
+            background-size: cover; /* Make sure the image covers the container */
+            background-position: center; /* Center the background image */
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center vertically */
+            align-items: center; /* Center horizontally */
+            position: relative;
+        }
+
+        /* Optional overlay for readability */
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
+            z-index: 0; /* Make sure the content appears on top */
+        }
+
+        /* Text and content container */
+        .content {
+            position: relative;
+            z-index: 1; /* Ensure it is above the overlay */
+            text-align: center; /* Center text */
+        }
+
+        /* Form styling */
+        #country-form label, #country-form select {
+            font-size: 18px;
+            margin: 10px;
+        }
+
+        /* Submit button styling */
+        #country-form button {
+            display: inline-block;
+            background-color: #3498db; /* Button color */
+            color: white; /* Text color */
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #country-form button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Action Button Styling */
+        .btn {
+            display: inline-block;
+            background-color: #e74c3c; /* Action button color */
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Shadow Effect */
+        }
+
+        .btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* Enlarged plot area */
+        #plot {
+            width: 800px; /* Increase the width */
+            height: 400px; /* Set a specific height */
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.1); /* Light background for the canvas */
+            border: 2px solid #fff; /* Border for better visibility */
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Background container with image -->
+    <div class="background-container">
+        <div class="background-overlay"></div>
+
+        <!-- Main content that appears on top of the image -->
+        <div class="content">
+            <h1>Select a Country</h1>
+            <form id="country-form">
+                <label for="country">Country:</label>
+                <select id="country" name="country">
+                    {% for country in countries %}
+                        <option value="{{ country }}">{{ country }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Plot Graph</button>
+            </form>
+
+            <a href="https://sites.google.com/view/climategenderequity/take-action" class="btn">Take Action</a>
+
+            <!-- Updated plot area with increased dimensions -->
+            <div id="plot"></div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#country-form').submit(function(event) {
+                event.preventDefault();
+
+                // Get the selected country
+                var country = $('#country').val();
+
+                // Send the country to the server to get the graph
+                $.ajax({
+                    type: 'POST',
+                    url: '/plot',
+                    contentType: 'application/json',
+                    data: JSON.stringify({country: country}),
+                    success: function(response) {
+                        // Display the returned plot
+                        $('#plot').html(response.graph);
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
