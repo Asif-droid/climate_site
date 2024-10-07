@@ -49,5 +49,5 @@ def plot():
 
     return jsonify({'graph': graph_div})
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
